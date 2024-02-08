@@ -9,5 +9,4 @@ import es.luisherrero.apirest1.model.Aula;
 public interface IAulaRepository extends JpaRepository<Aula, Integer> {
 
 	
-	
 }

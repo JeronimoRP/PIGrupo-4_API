@@ -2,7 +2,6 @@ package es.luisherrero.apirest1.model;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 import jakarta.persistence.*;
 
@@ -36,8 +35,6 @@ public class Equipo implements Serializable {
 	private String tipoEquipo;
 
 	private Aula aula;
-
-	private List<Incidencia> incidencias;
 
 	public Equipo() {
 	}
@@ -120,28 +117,6 @@ public class Equipo implements Serializable {
 
 	public void setAula(Aula aula) {
 		this.aula = aula;
-	}
-
-	public List<Incidencia> getIncidencias() {
-		return this.incidencias;
-	}
-
-	public void setIncidencias(List<Incidencia> incidencias) {
-		this.incidencias = incidencias;
-	}
-
-	public Incidencia addIncidencia(Incidencia incidencia) {
-		getIncidencias().add(incidencia);
-		incidencia.setEquipo(this);
-
-		return incidencia;
-	}
-
-	public Incidencia removeIncidencia(Incidencia incidencia) {
-		getIncidencias().remove(incidencia);
-		incidencia.setEquipo(null);
-
-		return incidencia;
 	}
 
 }

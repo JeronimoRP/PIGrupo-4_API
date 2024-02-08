@@ -1,7 +1,6 @@
 package es.luisherrero.apirest1.model;
 
 import java.io.Serializable;
-import java.util.List;
 
 import jakarta.persistence.*;
 
@@ -16,7 +15,7 @@ public class Departamento implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private int int_;
+	private int id;
 
 	private byte activo;
 
@@ -24,19 +23,19 @@ public class Departamento implements Serializable {
 
 	private String nombre;
 
+	@ManyToOne
+	@JoinColumn(name="jefedep_id")
 	private Personal personal;
-
-	private List<Personal> personals;
 
 	public Departamento() {
 	}
 
 	public int getInt_() {
-		return this.int_;
+		return this.id;
 	}
 
-	public void setInt_(int int_) {
-		this.int_ = int_;
+	public void setInt_(int id) {
+		this.id = id;
 	}
 
 	public byte getActivo() {
@@ -69,28 +68,6 @@ public class Departamento implements Serializable {
 
 	public void setPersonal(Personal personal) {
 		this.personal = personal;
-	}
-
-	public List<Personal> getPersonals() {
-		return this.personals;
-	}
-
-	public void setPersonals(List<Personal> personals) {
-		this.personals = personals;
-	}
-
-	public Personal addPersonal(Personal personal) {
-		getPersonals().add(personal);
-		personal.setDepartamento(this);
-
-		return personal;
-	}
-
-	public Personal removePersonal(Personal personal) {
-		getPersonals().remove(personal);
-		personal.setDepartamento(null);
-
-		return personal;
 	}
 
 }

@@ -23,7 +23,8 @@ public class IncidenciasSubtipo implements Serializable {
 	private String subtipoNombre;
 
 	private String tipo;
-
+	
+	@OneToMany
 	private List<Incidencia> incidencias;
 
 	public IncidenciasSubtipo() {
