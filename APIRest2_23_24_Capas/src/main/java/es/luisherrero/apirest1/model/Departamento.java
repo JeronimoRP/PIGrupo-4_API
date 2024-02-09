@@ -23,9 +23,7 @@ public class Departamento implements Serializable {
 
 	private String nombre;
 
-	@ManyToOne
-	@JoinColumn(name="jefedep_id")
-	private Personal personal;
+	private int jefedep_id;
 
 	public Departamento() {
 	}
@@ -62,12 +60,12 @@ public class Departamento implements Serializable {
 		this.nombre = nombre;
 	}
 
-	public Personal getPersonal() {
-		return this.personal;
+	public int getJefedep_id() {
+		return jefedep_id;
 	}
 
-	public void setPersonal(Personal personal) {
-		this.personal = personal;
+	public void setJefedep_id(int jefedep_id) {
+		this.jefedep_id = jefedep_id;
 	}
 
 }

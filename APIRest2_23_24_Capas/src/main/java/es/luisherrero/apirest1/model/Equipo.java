@@ -3,6 +3,7 @@ package es.luisherrero.apirest1.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import enums.TipoEquipo;
 import jakarta.persistence.*;
 
 
@@ -32,8 +33,10 @@ public class Equipo implements Serializable {
 
 	private int puesto;
 
-	private String tipoEquipo;
+	@Enumerated(EnumType.STRING)
+	private TipoEquipo tipoEquipo;
 
+	@ManyToOne
 	private Aula aula;
 
 	public Equipo() {
@@ -103,11 +106,11 @@ public class Equipo implements Serializable {
 		this.puesto = puesto;
 	}
 
-	public String getTipoEquipo() {
-		return this.tipoEquipo;
+	public TipoEquipo getTipoEquipo() {
+		return tipoEquipo;
 	}
 
-	public void setTipoEquipo(String tipoEquipo) {
+	public void setTipoEquipo(TipoEquipo tipoEquipo) {
 		this.tipoEquipo = tipoEquipo;
 	}
 

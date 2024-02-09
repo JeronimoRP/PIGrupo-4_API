@@ -15,7 +15,6 @@ public class Personal implements Serializable {
 
 	@Id
 	private int id;
-
 	private byte activo;
 
 	private String apellido1;
@@ -34,8 +33,9 @@ public class Personal implements Serializable {
 
 	private String tlf;
 
-	private Perfile perfile;
-
+	
+	@ManyToOne
+	@JoinColumn(name="departamento_id")
 	private Departamento departamento;
 
 	public Personal() {
@@ -120,15 +120,7 @@ public class Personal implements Serializable {
 	public void setTlf(String tlf) {
 		this.tlf = tlf;
 	}
-
-	public Perfile getPerfile() {
-		return this.perfile;
-	}
-
-	public void setPerfile(Perfile perfile) {
-		this.perfile = perfile;
-	}
-
+	
 	public Departamento getDepartamento() {
 		return this.departamento;
 	}

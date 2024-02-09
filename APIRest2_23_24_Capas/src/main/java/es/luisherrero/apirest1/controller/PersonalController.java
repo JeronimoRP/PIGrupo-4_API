@@ -23,7 +23,7 @@ public class PersonalController {
 	@Autowired
 	private PersonalService personalService;
 	
-	@GetMapping("/personal")
+	@GetMapping("/personals")
 	public List<Personal> getPersonal(){
 		return this.personalService.getPersonals();
 	}
@@ -40,10 +40,10 @@ public class PersonalController {
 	
 	 @GetMapping("/perfil")
 	 public String obtenerPerfilUsuario(Personal personal) {
-	        Perfile perfil = personalService.obtenerPerfilUsuario(personal);
+	        Optional<Perfile> perfil = personalService.obtenerPerfilUsuario(personal);
 
 	        if (perfil != null) {
-	            return perfil.getPerfil().toLowerCase();
+	            return perfil.get().getPerfil().toString();
 	        } else {
 	            return "Usuario no válido";
 	        }
