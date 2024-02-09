@@ -24,10 +24,8 @@ public class Comentario implements Serializable {
 
 	private String texto;
 
-	@ManyToOne
 	private Incidencia incidencia;
 
-	@ManyToOne
 	private Personal personal;
 
 	public Comentario() {

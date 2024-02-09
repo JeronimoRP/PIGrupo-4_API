@@ -1,6 +1,7 @@
 package es.luisherrero.apirest1.model;
 
 import java.io.Serializable;
+// import java.util.List;
 
 import jakarta.persistence.*;
 
@@ -12,7 +13,8 @@ import jakarta.persistence.*;
 @Entity
 @Table(name="aulas")
 public class Aula implements Serializable {
-	private static final long serialVersionUID=1;
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	private int num;
 
@@ -21,6 +23,8 @@ public class Aula implements Serializable {
 	private String descripcion;
 
 	private int planta;
+
+	// private List<Equipo> equipos;
 
 	public Aula() {
 	}
@@ -56,5 +60,29 @@ public class Aula implements Serializable {
 	public void setPlanta(int planta) {
 		this.planta = planta;
 	}
-	
+
+	/*
+	public List<Equipo> getEquipos() {
+		return this.equipos;
+	}
+
+	public void setEquipos(List<Equipo> equipos) {
+		this.equipos = equipos;
+	}
+
+	public Equipo addEquipo(Equipo equipo) {
+		getEquipos().add(equipo);
+		equipo.setAula(this);
+
+		return equipo;
+	}
+
+	public Equipo removeEquipo(Equipo equipo) {
+		getEquipos().remove(equipo);
+		equipo.setAula(null);
+
+		return equipo;
+	}
+	*/
+
 }

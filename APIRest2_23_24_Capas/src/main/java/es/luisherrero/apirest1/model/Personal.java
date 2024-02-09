@@ -1,6 +1,7 @@
 package es.luisherrero.apirest1.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 import jakarta.persistence.*;
 
@@ -15,6 +16,7 @@ public class Personal implements Serializable {
 
 	@Id
 	private int id;
+
 	private byte activo;
 
 	private String apellido1;
@@ -33,9 +35,16 @@ public class Personal implements Serializable {
 
 	private String tlf;
 
-	
-	@ManyToOne
-	@JoinColumn(name="departamento_id")
+	private List<Comentario> comentarios;
+
+	private List<Departamento> departamentos;
+
+	private List<Incidencia> incidencias1;
+
+	private List<Incidencia> incidencias2;
+
+	private Perfile perfile;
+
 	private Departamento departamento;
 
 	public Personal() {
@@ -120,7 +129,103 @@ public class Personal implements Serializable {
 	public void setTlf(String tlf) {
 		this.tlf = tlf;
 	}
-	
+
+	public List<Comentario> getComentarios() {
+		return this.comentarios;
+	}
+
+	public void setComentarios(List<Comentario> comentarios) {
+		this.comentarios = comentarios;
+	}
+
+	public Comentario addComentario(Comentario comentario) {
+		getComentarios().add(comentario);
+		comentario.setPersonal(this);
+
+		return comentario;
+	}
+
+	public Comentario removeComentario(Comentario comentario) {
+		getComentarios().remove(comentario);
+		comentario.setPersonal(null);
+
+		return comentario;
+	}
+
+	public List<Departamento> getDepartamentos() {
+		return this.departamentos;
+	}
+
+	public void setDepartamentos(List<Departamento> departamentos) {
+		this.departamentos = departamentos;
+	}
+
+	public Departamento addDepartamento(Departamento departamento) {
+		getDepartamentos().add(departamento);
+		departamento.setPersonal(this);
+
+		return departamento;
+	}
+
+	public Departamento removeDepartamento(Departamento departamento) {
+		getDepartamentos().remove(departamento);
+		departamento.setPersonal(null);
+
+		return departamento;
+	}
+
+	public List<Incidencia> getIncidencias1() {
+		return this.incidencias1;
+	}
+
+	public void setIncidencias1(List<Incidencia> incidencias1) {
+		this.incidencias1 = incidencias1;
+	}
+
+	public Incidencia addIncidencias1(Incidencia incidencias1) {
+		getIncidencias1().add(incidencias1);
+		incidencias1.setPersonal1(this);
+
+		return incidencias1;
+	}
+
+	public Incidencia removeIncidencias1(Incidencia incidencias1) {
+		getIncidencias1().remove(incidencias1);
+		incidencias1.setPersonal1(null);
+
+		return incidencias1;
+	}
+
+	public List<Incidencia> getIncidencias2() {
+		return this.incidencias2;
+	}
+
+	public void setIncidencias2(List<Incidencia> incidencias2) {
+		this.incidencias2 = incidencias2;
+	}
+
+	public Incidencia addIncidencias2(Incidencia incidencias2) {
+		getIncidencias2().add(incidencias2);
+		incidencias2.setPersonal2(this);
+
+		return incidencias2;
+	}
+
+	public Incidencia removeIncidencias2(Incidencia incidencias2) {
+		getIncidencias2().remove(incidencias2);
+		incidencias2.setPersonal2(null);
+
+		return incidencias2;
+	}
+
+	public Perfile getPerfile() {
+		return this.perfile;
+	}
+
+	public void setPerfile(Perfile perfile) {
+		this.perfile = perfile;
+	}
+
 	public Departamento getDepartamento() {
 		return this.departamento;
 	}

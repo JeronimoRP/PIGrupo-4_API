@@ -2,6 +2,7 @@ package es.luisherrero.apirest1.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import jakarta.persistence.*;
 
@@ -29,20 +30,15 @@ public class Incidencia implements Serializable {
 	private Date fechaCreacion;
 
 	private String tipo;
+	
+	private List<Comentario> comentarios;
 
-	@ManyToOne
 	private Equipo equipo;
 
-	@ManyToOne
-	@JoinColumn(name="subtipo_id")
 	private IncidenciasSubtipo incidenciasSubtipo;
 
-	@ManyToOne
-	@JoinColumn(name="creador_id")
 	private Personal personal1;
 
-	@ManyToOne
-	@JoinColumn(name="responsable_id")
 	private Personal personal2;
 
 	public Incidencia() {
@@ -102,6 +98,28 @@ public class Incidencia implements Serializable {
 
 	public void setTipo(String tipo) {
 		this.tipo = tipo;
+	}
+
+	public List<Comentario> getComentarios() {
+		return this.comentarios;
+	}
+
+	public void setComentarios(List<Comentario> comentarios) {
+		this.comentarios = comentarios;
+	}
+
+	public Comentario addComentario(Comentario comentario) {
+		getComentarios().add(comentario);
+		comentario.setIncidencia(this);
+
+		return comentario;
+	}
+
+	public Comentario removeComentario(Comentario comentario) {
+		getComentarios().remove(comentario);
+		comentario.setIncidencia(null);
+
+		return comentario;
 	}
 
 	public Equipo getEquipo() {

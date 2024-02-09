@@ -2,7 +2,6 @@ package es.luisherrero.apirest1.model;
 
 import java.io.Serializable;
 
-import enums.Perfil;
 import jakarta.persistence.*;
 
 
@@ -16,7 +15,6 @@ public class Perfile implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name = "personal_id")
 	private int personalId;
 
 	private String dominio;
@@ -25,8 +23,9 @@ public class Perfile implements Serializable {
 
 	private String password;
 
-	@Enumerated(EnumType.STRING)
-	private Perfil perfil;
+	private String perfil;
+
+	private Personal personal;
 
 	public Perfile() {
 	}
@@ -63,12 +62,20 @@ public class Perfile implements Serializable {
 		this.password = password;
 	}
 
-	public Perfil getPerfil() {
-		return perfil;
+	public String getPerfil() {
+		return this.perfil;
 	}
 
-	public void setPerfil(Perfil perfil) {
+	public void setPerfil(String perfil) {
 		this.perfil = perfil;
+	}
+
+	public Personal getPersonal() {
+		return this.personal;
+	}
+
+	public void setPersonal(Personal personal) {
+		this.personal = personal;
 	}
 
 }
