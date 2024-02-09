@@ -1,8 +1,8 @@
 package es.luisherrero.apirest1.model;
 
 import java.io.Serializable;
-import java.util.List;
 
+import enums.Tipo;
 import jakarta.persistence.*;
 
 
@@ -22,9 +22,9 @@ public class IncidenciasSubtipo implements Serializable {
 
 	private String subtipoNombre;
 
-	private String tipo;
-
-	private List<Incidencia> incidencias;
+	@Enumerated(EnumType.STRING)
+	private Tipo tipo;
+	
 
 	public IncidenciasSubtipo() {
 	}
@@ -53,34 +53,11 @@ public class IncidenciasSubtipo implements Serializable {
 		this.subtipoNombre = subtipoNombre;
 	}
 
-	public String getTipo() {
-		return this.tipo;
+	public Tipo getTipo() {
+		return tipo;
 	}
 
-	public void setTipo(String tipo) {
+	public void setTipo(Tipo tipo) {
 		this.tipo = tipo;
 	}
-
-	public List<Incidencia> getIncidencias() {
-		return this.incidencias;
-	}
-
-	public void setIncidencias(List<Incidencia> incidencias) {
-		this.incidencias = incidencias;
-	}
-
-	public Incidencia addIncidencia(Incidencia incidencia) {
-		getIncidencias().add(incidencia);
-		incidencia.setIncidenciasSubtipo(this);
-
-		return incidencia;
-	}
-
-	public Incidencia removeIncidencia(Incidencia incidencia) {
-		getIncidencias().remove(incidencia);
-		incidencia.setIncidenciasSubtipo(null);
-
-		return incidencia;
-	}
-
 }
