@@ -18,7 +18,29 @@ public class PerfileService {
 		return this.perfileRepository.findAll();
 	}
 	
+	public Perfile savePerfile(Perfile perfile) {
+		return perfileRepository.save(perfile);
+	}
+
+	
 	public Optional<Perfile> getByDominio(String dominio) {
 		return perfileRepository.getPersonalByDominio(dominio);
+	}
+	
+	public Perfile updateById(Perfile request, int id) {
+		Perfile perfile = perfileRepository.findById(id).get();
+		perfile.setPerfil(request.getPerfil());
+		perfile.setPassword(request.getPassword());
+		perfileRepository.save(perfile);
+		return perfile;
+	}
+	
+	public Boolean deletedPerfile(int id) {
+		try {
+			perfileRepository.deleteById(id);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 }

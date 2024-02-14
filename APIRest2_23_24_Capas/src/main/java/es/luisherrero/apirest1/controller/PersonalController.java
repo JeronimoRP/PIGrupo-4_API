@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,6 +48,11 @@ public class PersonalController {
 	            return "Usuario no válido";
 	        }
 	    }
+	 
+	 @PutMapping(path = "/{id}")
+		public Personal updatePersonalById(@RequestBody Personal personal, @PathVariable int id) {
+			return personalService.updateById(personal, id);
+		} 
 	 
 	@DeleteMapping(path = "/{id}")
 	public String deletePersonalById(@PathVariable("id") int id) {

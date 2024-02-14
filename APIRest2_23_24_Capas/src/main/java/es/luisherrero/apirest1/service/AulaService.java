@@ -31,8 +31,8 @@ public class AulaService {
 		Aula aula = aulaRepository.findById(id).get();
 		aula.setCodigo(request.getCodigo());
 		aula.setDescripcion(request.getDescripcion());
-		// aula.setEquipos(request.getEquipos());
 		aula.setPlanta(request.getPlanta());
+		aulaRepository.save(aula);
 		return aula;
 	}
 	

@@ -33,8 +33,8 @@ public class IncidenciaController {
 	    return incidenciaService.saveIncidencia(incidencia);
 	}
 	
-	@PutMapping
-	public Incidencia updateIncidenciaById(@RequestBody Incidencia incidencia, int id) {
+	@PutMapping(path = "/{id}")
+	public Incidencia updateIncidenciaById(@RequestBody Incidencia incidencia, @PathVariable int id) {
 		return incidenciaService.updateById(incidencia, id);
 	}
 	

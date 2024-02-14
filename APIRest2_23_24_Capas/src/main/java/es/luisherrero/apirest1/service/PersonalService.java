@@ -31,6 +31,14 @@ public class PersonalService {
 		return personalRepository.findById(id);
 	}
 
+	public Personal updateById(Personal request, int id) {
+		Personal personal = personalRepository.findById(id).get();
+		personal.setActivo(request.getActivo());
+		personal.setDepartamento(request.getDepartamento());
+		personalRepository.save(personal);
+		return personal;
+	}
+	
 	public Boolean deletedPersonal(int id) {
 		try {
 			personalRepository.deleteById(id);

@@ -39,8 +39,8 @@ public class AulaController {
 	}
 	
 	
-	@PutMapping
-	public Aula updateAulaById(@RequestBody Aula aula, int id) {
+	@PutMapping(path = "/{id}")
+	public Aula updateAulaById(@RequestBody Aula aula, @PathVariable int id) {
 		return aulaService.updateById(aula, id);
 	}
 	
@@ -49,7 +49,7 @@ public class AulaController {
 	public String deleteAulaById(@PathVariable("id") int id) {
 		boolean deleted = aulaService.deletedAula(id);
 		if (deleted) {
-			return "Aula con id " + id + "eliminado correctamente";
+			return "Aula con id " + id + " eliminado correctamente";
 		}else {
 			return "Error al eliminar aula";
 		}

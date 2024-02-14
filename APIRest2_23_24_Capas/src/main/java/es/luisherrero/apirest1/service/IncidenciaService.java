@@ -39,6 +39,7 @@ public class IncidenciaService {
 		incidencia.setFechaCierre(request.getFechaCierre());
 		incidencia.setTipo(request.getTipo());
 		incidencia.setIncidenciasSubtipo(request.getIncidenciasSubtipo());
+		incidenciaRepository.save(incidencia);
 		return incidencia;
 	}
 	
