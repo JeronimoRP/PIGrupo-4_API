@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import enums.Tipo;
 import es.luisherrero.apirest1.model.Incidencia;
 import es.luisherrero.apirest1.model.Personal;
 import es.luisherrero.apirest1.repository.IIncidenciaRepository;
@@ -31,6 +32,11 @@ public class IncidenciaService {
 	public Optional<Incidencia> getById(int id) {
 		return incidenciaRepository.findById(id);
 	}
+	
+	public Optional<Incidencia> getByFiltro(Tipo tipo, String subTipo, String estado) {
+		return incidenciaRepository.findByFiltro(tipo, subTipo, estado);
+	}
+	
 	
 	public Incidencia updateById(Incidencia request, int id) {
 		Incidencia incidencia = incidenciaRepository.findById(id).get();
