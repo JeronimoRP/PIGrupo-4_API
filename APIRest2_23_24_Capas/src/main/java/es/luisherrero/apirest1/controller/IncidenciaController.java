@@ -1,7 +1,6 @@
 package es.luisherrero.apirest1.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,7 +30,7 @@ public class IncidenciaController {
 	}
 
 	@GetMapping("/incidencias/filtro")
-	public Optional<Incidencia> getAulaById(@RequestParam(name = "tipo") Tipo tipo,
+	public Incidencia getAulaById(@RequestParam(name = "tipo") Tipo tipo,
 			@RequestParam(name = "subTipo") String subTipo, @RequestParam(name = "estado") String estado) {
 		return incidenciaService.getByFiltro(tipo, subTipo, estado);
 	}

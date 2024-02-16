@@ -8,8 +8,10 @@ import org.springframework.stereotype.Service;
 
 import enums.Tipo;
 import es.luisherrero.apirest1.model.Incidencia;
+import es.luisherrero.apirest1.model.IncidenciasSubtipo;
 import es.luisherrero.apirest1.model.Personal;
 import es.luisherrero.apirest1.repository.IIncidenciaRepository;
+import es.luisherrero.apirest1.repository.IIncidenciasSubtipoRepository;
 import es.luisherrero.apirest1.repository.IPersonalRepository;
 
 @Service
@@ -20,6 +22,9 @@ public class IncidenciaService {
 	
 	@Autowired
 	IPersonalRepository personalRepository;
+	
+	@Autowired
+	IIncidenciasSubtipoRepository incidenciasSubtipoRepository;
 	
 	public List<Incidencia> getIncidencias() {
 		return this.incidenciaRepository.findAll();
@@ -33,9 +38,10 @@ public class IncidenciaService {
 		return incidenciaRepository.findById(id);
 	}
 	
-	public Optional<Incidencia> getByFiltro(Tipo tipo, String subTipo, String estado) {
-		return incidenciaRepository.findByFiltro(tipo, subTipo, estado);
-	}
+	 public Incidencia getByFiltro(Tipo tipo, String subTipo, String estado) {
+	        IncidenciasSubtipo incidenciasSubtipo = incidenciasSubtipoRepository.findBySubtipoNombre(subTipo).stream().findFirst().orElse(null);
+	        return incidenciaRepository.findByTipoAndIncidenciasSubtipoAndEstado(tipo, incidenciasSubtipo, estado);
+	    }
 	
 	
 	public Incidencia updateById(Incidencia request, int id) {
