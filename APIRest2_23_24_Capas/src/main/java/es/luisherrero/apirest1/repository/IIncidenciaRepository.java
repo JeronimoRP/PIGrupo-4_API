@@ -1,15 +1,22 @@
 package es.luisherrero.apirest1.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import enums.Tipo;
 import es.luisherrero.apirest1.model.Incidencia;
-import es.luisherrero.apirest1.model.IncidenciasSubtipo;
 
 @Repository
 public interface IIncidenciaRepository extends JpaRepository<Incidencia, Integer>{
-
-	Incidencia findByTipoAndIncidenciasSubtipoAndEstado(Tipo tipo, IncidenciasSubtipo incidenciasSubtipo, String estado);
 	
+	List<Incidencia> findByTipoAndIncidenciasSubtipo_IdInAndEstado(String tipo, List<Integer> subtipoIds, String estado);
+	
+	List<Incidencia> findByTipo(String tipo);
+	
+	List<Incidencia> findByIncidenciasSubtipo_Id(int subtipoId);
+	
+	List<Incidencia> findByEstado(String estado);
+	
+	List<Incidencia> findByIncidenciasSubtipo_IdIn(List<Integer> subtipoIds);
 }

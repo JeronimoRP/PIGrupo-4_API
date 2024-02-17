@@ -1,5 +1,6 @@
 package es.luisherrero.apirest1.controller;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import enums.Tipo;
 import es.luisherrero.apirest1.model.Incidencia;
 import es.luisherrero.apirest1.service.IncidenciaService;
 
@@ -22,6 +22,7 @@ import es.luisherrero.apirest1.service.IncidenciaService;
 public class IncidenciaController {
 
 	@Autowired
+
 	private IncidenciaService incidenciaService;
 
 	@GetMapping("/incidencias")
@@ -29,12 +30,37 @@ public class IncidenciaController {
 		return incidenciaService.getIncidencias();
 	}
 
-	@GetMapping("/incidencias/filtro")
-	public Incidencia getAulaById(@RequestParam(name = "tipo") Tipo tipo,
-			@RequestParam(name = "subTipo") String subTipo, @RequestParam(name = "estado") String estado) {
-		return incidenciaService.getByFiltro(tipo, subTipo, estado);
+	@GetMapping("/filtro")
+	public List<Incidencia> getIncidenciasByFiltro(
+	        @RequestParam(name = "tipo", required = false) String tipo,
+	        @RequestParam(name = "subtipoNombre", required = false) String subtipoNombre,
+	        @RequestParam(name = "estado", required = false) String estado) {
+	    return incidenciaService.getByTipoAndIncidenciasSubtipoAndEstado(tipo, subtipoNombre, estado);
 	}
+	
+	@GetMapping("/incidencias/tipo")
+	public List<Incidencia> getIncidenciasByTipo(@RequestParam(name = "tipo") String tipo) {
+	    try {
+	        return incidenciaService.getByTipo(tipo);
+	    } catch (IllegalArgumentException e) {
+	        return Collections.emptyList();
+	    }
+	}
+	@GetMapping("/subtipo/id/{subtipoId}")
+    public List<Incidencia> getIncidenciasBySubtipo(@PathVariable int subtipoId) {
+        return incidenciaService.getBySubtipo(subtipoId);
+    }
+	
+	@GetMapping("/subtipo/nombre/{subtipoNombre}")
+	public List<Incidencia> getIncidenciasBySubtipoNombre(@PathVariable String subtipoNombre) {
+        return incidenciaService.getBySubtipoNombre(subtipoNombre);
+    }
 
+	@GetMapping("/incidencias/estado")
+	public List<Incidencia> getIncidenciasByEstado(@RequestParam(name = "estado") String estado) {
+		return incidenciaService.getByEstado(estado);
+	}
+	
 	@PostMapping
 	public Incidencia saveIncidencia(@RequestBody Incidencia incidencia) {
 		return incidenciaService.saveIncidencia(incidencia);
