@@ -1,5 +1,6 @@
 package es.luisherrero.apirest1.service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -40,34 +41,62 @@ public class IncidenciaService {
 	}
 
 	public List<Incidencia> getByTipoAndIncidenciasSubtipoAndEstado(String tipo, String subtipoNombre, String estado) {
-        List<IncidenciasSubtipo> incidenciasSubtipos = incidenciasSubtipoRepository.findBySubtipoNombre(subtipoNombre);
-        List<Integer> subtipoIds = incidenciasSubtipos.stream()
-                .map(IncidenciasSubtipo::getId)
-                .collect(Collectors.toList());
-        return incidenciaRepository.findByTipoAndIncidenciasSubtipo_IdInAndEstado(tipo, subtipoIds, estado);
-    }
-	
+		List<IncidenciasSubtipo> incidenciasSubtipos = new ArrayList<>();
+		List<Integer> subtipoIds = new ArrayList<>();
+
+		if (subtipoNombre != null && !subtipoNombre.isEmpty()) {
+			incidenciasSubtipos = incidenciasSubtipoRepository.findBySubtipoNombre(subtipoNombre);
+			subtipoIds = incidenciasSubtipos.stream().map(IncidenciasSubtipo::getId).collect(Collectors.toList());
+		}
+
+		String tipoFiltrar = (tipo != null && !tipo.isEmpty()) ? tipo : null;
+		String estadoFiltrar = (estado != null && !estado.isEmpty()) ? estado : null;
+
+		if (tipoFiltrar != null && subtipoIds.isEmpty() && estadoFiltrar == null) {
+
+			return incidenciaRepository.findByTipo(tipoFiltrar);
+		} else if (tipoFiltrar == null && !subtipoIds.isEmpty() && estadoFiltrar == null) {
+
+			return incidenciaRepository.findByIncidenciasSubtipo_IdIn(subtipoIds);
+		} else if (tipoFiltrar == null && subtipoIds.isEmpty() && estadoFiltrar != null) {
+
+			return incidenciaRepository.findByEstado(estadoFiltrar);
+		} else if (tipoFiltrar != null && !subtipoIds.isEmpty() && estadoFiltrar == null) {
+
+			return incidenciaRepository.findByTipoAndIncidenciasSubtipo_IdIn(tipoFiltrar, subtipoIds);
+		} else if (tipoFiltrar != null && subtipoIds.isEmpty() && estadoFiltrar != null) {
+
+			return incidenciaRepository.findByTipoAndEstado(tipoFiltrar, estadoFiltrar);
+		} else if (tipoFiltrar == null && !subtipoIds.isEmpty() && estadoFiltrar != null) {
+
+			return incidenciaRepository.findByIncidenciasSubtipo_IdInAndEstado(subtipoIds, estadoFiltrar);
+		} else {
+
+			return incidenciaRepository.findByTipoAndIncidenciasSubtipo_IdInAndEstado(tipoFiltrar, subtipoIds,
+					estadoFiltrar);
+		}
+	}
+
 	public List<Incidencia> getByTipo(String tipo) {
 		return incidenciaRepository.findByTipo(tipo);
 	}
 
 	public List<Incidencia> getBySubtipo(int subtipoId) {
-        return incidenciaRepository.findByIncidenciasSubtipo_Id(subtipoId);
-    }
-	
+		return incidenciaRepository.findByIncidenciasSubtipo_Id(subtipoId);
+	}
+
 	public List<Incidencia> getBySubtipoNombre(String subtipoNombre) {
-        List<IncidenciasSubtipo> incidenciasSubtipos = incidenciasSubtipoRepository.findBySubtipoNombre(subtipoNombre);
+		List<IncidenciasSubtipo> incidenciasSubtipos = incidenciasSubtipoRepository.findBySubtipoNombre(subtipoNombre);
 
-        if (!incidenciasSubtipos.isEmpty()) {
-            List<Integer> subtipoIds = incidenciasSubtipos.stream()
-                    .map(IncidenciasSubtipo::getId)
-                    .collect(Collectors.toList());
+		if (!incidenciasSubtipos.isEmpty()) {
+			List<Integer> subtipoIds = incidenciasSubtipos.stream().map(IncidenciasSubtipo::getId)
+					.collect(Collectors.toList());
 
-            return incidenciaRepository.findByIncidenciasSubtipo_IdIn(subtipoIds);
-        } else {
-            return Collections.emptyList(); 
-        }
-    }
+			return incidenciaRepository.findByIncidenciasSubtipo_IdIn(subtipoIds);
+		} else {
+			return Collections.emptyList();
+		}
+	}
 
 	public List<Incidencia> getByEstado(String estado) {
 		return incidenciaRepository.findByEstado(estado);

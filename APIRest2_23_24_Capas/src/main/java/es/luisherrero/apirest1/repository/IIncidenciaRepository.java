@@ -19,4 +19,10 @@ public interface IIncidenciaRepository extends JpaRepository<Incidencia, Integer
 	List<Incidencia> findByEstado(String estado);
 	
 	List<Incidencia> findByIncidenciasSubtipo_IdIn(List<Integer> subtipoIds);
+
+	List<Incidencia> findByTipoAndIncidenciasSubtipo_IdIn(String tipoFiltrar, List<Integer> subtipoIds);
+
+	List<Incidencia> findByTipoAndEstado(String tipoFiltrar, String estadoFiltrar);
+
+	List<Incidencia> findByIncidenciasSubtipo_IdInAndEstado(List<Integer> subtipoIds, String estadoFiltrar);
 }
