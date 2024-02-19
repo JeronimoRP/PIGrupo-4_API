@@ -2,7 +2,9 @@ package es.luisherrero.apirest1.model;
 
 import java.io.Serializable;
 import java.sql.Time;
+import java.time.LocalDateTime;
 import java.util.Date;
+
 
 import jakarta.persistence.*;
 
@@ -27,7 +29,7 @@ public class Incidencia implements Serializable {
 
 	private Date fechaCierre;
 
-	private Date fechaCreacion;
+	private LocalDateTime fechaCreacion;
 
 	private String tipo;
 	
@@ -91,11 +93,11 @@ public class Incidencia implements Serializable {
 		this.fechaCierre = fechaCierre;
 	}
 
-	public Date getFechaCreacion() {
+	public LocalDateTime getFechaCreacion() {
 		return this.fechaCreacion;
 	}
 
-	public void setFechaCreacion(Date fechaCreacion) {
+	public void setFechaCreacion(LocalDateTime fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
 	}
 

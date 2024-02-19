@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.luisherrero.apirest1.model.Perfile;
@@ -23,43 +24,50 @@ public class PersonalController {
 
 	@Autowired
 	private PersonalService personalService;
-	
+
 	@GetMapping("/personals")
-	public List<Personal> getPersonal(){
+	public List<Personal> getPersonal() {
 		return this.personalService.getPersonals();
 	}
-	
+
 	@PostMapping
 	public Personal savePersonal(@RequestBody Personal personal) {
-	    return personalService.savePersonal(personal);
+		return personalService.savePersonal(personal);
 	}
-	
+
 	@GetMapping(path = "/{id}")
-	public Optional<Personal> getPersonalById(@PathVariable("id") int id){
-		return  personalService.getById(id);
+	public Optional<Personal> getPersonalById(@PathVariable("id") int id) {
+		return personalService.getById(id);
 	}
-	
-	 @GetMapping("/perfil")
-	 public String obtenerPerfilUsuario(Personal personal) {
-	        Optional<Perfile> perfil = personalService.obtenerPerfilUsuario(personal);
-	        if (perfil != null) {
-	            return perfil.get().getPerfil().toString();
-	        } else {
-	            return "Usuario no válido";
-	        }
-	    }
-	 
-	 @PutMapping(path = "/{id}")
-		public Personal updatePersonalById(@RequestBody Personal personal, @PathVariable int id) {
-			return personalService.updateById(personal, id);
-		} 
-	 
+
+	@GetMapping("/nombre/apellidos")
+	public Personal getPersonalById(@RequestParam(name = "nombre") String nombre,
+			@RequestParam(name = "primerApellido") String apellido1,
+			@RequestParam(name = "segundoApellido") String apellido2) {
+		return personalService.getByNombreApellidos(nombre, apellido1,apellido2);
+	}
+
+	@GetMapping("/perfil")
+	public String obtenerPerfilUsuario(Personal personal) {
+		Optional<Perfile> perfil = personalService.obtenerPerfilUsuario(personal);
+		if (perfil != null) {
+			return perfil.get().getPerfil().toString();
+		} else {
+			return "Usuario no válido";
+		}
+	}
+
+	@PutMapping(path = "/{id}")
+	public Personal updatePersonalById(@RequestBody Personal personal, @PathVariable int id) {
+		return personalService.updateById(personal, id);
+	}
+
 	@DeleteMapping(path = "/{id}")
 	public String deletePersonalById(@PathVariable("id") int id) {
 		boolean deleted = personalService.deletedPersonal(id);
 		if (deleted) {
 			return "Aula con id " + id + "eliminado correctamente";
-		}else {
+		} else {
 			return "Error al eliminar aula";
 		}
 	}

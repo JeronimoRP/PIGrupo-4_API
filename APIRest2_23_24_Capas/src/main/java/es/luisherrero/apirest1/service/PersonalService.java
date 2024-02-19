@@ -30,6 +30,10 @@ public class PersonalService {
 	public Optional<Personal> getById(int id) {
 		return personalRepository.findById(id);
 	}
+	
+	public Personal getByNombreApellidos(String nombre, String apellido1, String apellido2) {
+		return personalRepository.findByNombreAndApellido1AndApellido2(nombre,apellido1,apellido2);
+	}
 
 	public Personal updateById(Personal request, int id) {
 		Personal personal = personalRepository.findById(id).get();

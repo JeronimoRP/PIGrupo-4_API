@@ -17,8 +17,10 @@ public class Personal implements Serializable {
 	private int id;
 	private byte activo;
 
+	@Column(name = "apellido1")
 	private String apellido1;
 
+	@Column(name = "apellido2")
 	private String apellido2;
 
 	private String cp;
@@ -29,6 +31,7 @@ public class Personal implements Serializable {
 
 	private String localidad;
 
+	@Column(name = "nombre")
 	private String nombre;
 
 	private String tlf;

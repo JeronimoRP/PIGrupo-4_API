@@ -1,6 +1,6 @@
 package es.luisherrero.apirest1.service;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +15,9 @@ import es.luisherrero.apirest1.model.Personal;
 import es.luisherrero.apirest1.repository.IIncidenciaRepository;
 import es.luisherrero.apirest1.repository.IIncidenciasSubtipoRepository;
 import es.luisherrero.apirest1.repository.IPersonalRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 
 @Service
 public class IncidenciaService {
@@ -27,6 +30,9 @@ public class IncidenciaService {
 
 	@Autowired
 	IIncidenciasSubtipoRepository incidenciasSubtipoRepository;
+	
+	@PersistenceContext
+    private EntityManager entityManager;
 
 	public List<Incidencia> getIncidencias() {
 		return this.incidenciaRepository.findAll();
@@ -39,42 +45,48 @@ public class IncidenciaService {
 	public Optional<Incidencia> getById(int id) {
 		return incidenciaRepository.findById(id);
 	}
+	
+	public List<Incidencia> getByTipoAndIncidenciasSubtipoAndEstado(String tipo, String subtipoNombre, String estado,
+			LocalDateTime date) {
+		TypedQuery<Integer> subtipoQuery = entityManager.createQuery("SELECT is.id FROM IncidenciasSubtipo is WHERE is.subtipoNombre = :subtipoNombre", Integer.class);
+		subtipoQuery.setParameter("subtipoNombre", subtipoNombre);
+		List<Integer> subtipoIds = subtipoQuery.getResultList();
+        
+		StringBuilder jpqlBuilder = new StringBuilder("SELECT i FROM Incidencia i WHERE 1 = 1");
+		if (tipo != null && !tipo.isEmpty()) {
+            jpqlBuilder.append(" AND i.tipo = :tipo");
+        }
 
-	public List<Incidencia> getByTipoAndIncidenciasSubtipoAndEstado(String tipo, String subtipoNombre, String estado) {
-		List<IncidenciasSubtipo> incidenciasSubtipos = new ArrayList<>();
-		List<Integer> subtipoIds = new ArrayList<>();
+        if (!subtipoIds.isEmpty()) {
+            jpqlBuilder.append(" AND i.incidenciasSubtipo.id IN :subtipoIds");
+        }
 
-		if (subtipoNombre != null && !subtipoNombre.isEmpty()) {
-			incidenciasSubtipos = incidenciasSubtipoRepository.findBySubtipoNombre(subtipoNombre);
-			subtipoIds = incidenciasSubtipos.stream().map(IncidenciasSubtipo::getId).collect(Collectors.toList());
-		}
+        if (estado != null && !estado.isEmpty()) {
+            jpqlBuilder.append(" AND i.estado = :estado");
+        }
 
-		String tipoFiltrar = (tipo != null && !tipo.isEmpty()) ? tipo : null;
-		String estadoFiltrar = (estado != null && !estado.isEmpty()) ? estado : null;
+        if (date != null) {
+            jpqlBuilder.append(" AND i.fechaCreacion = :fechaCreacion");
+        }
 
-		if (tipoFiltrar != null && subtipoIds.isEmpty() && estadoFiltrar == null) {
+        TypedQuery<Incidencia> query = entityManager.createQuery(jpqlBuilder.toString(), Incidencia.class);
 
-			return incidenciaRepository.findByTipo(tipoFiltrar);
-		} else if (tipoFiltrar == null && !subtipoIds.isEmpty() && estadoFiltrar == null) {
+        if (tipo != null && !tipo.isEmpty()) {
+            query.setParameter("tipo", tipo);
+        }
 
-			return incidenciaRepository.findByIncidenciasSubtipo_IdIn(subtipoIds);
-		} else if (tipoFiltrar == null && subtipoIds.isEmpty() && estadoFiltrar != null) {
+        if (!subtipoIds.isEmpty()) {
+            query.setParameter("subtipoIds", subtipoIds);
+        }
 
-			return incidenciaRepository.findByEstado(estadoFiltrar);
-		} else if (tipoFiltrar != null && !subtipoIds.isEmpty() && estadoFiltrar == null) {
+        if (estado != null && !estado.isEmpty()) {
+            query.setParameter("estado", estado);
+        }
 
-			return incidenciaRepository.findByTipoAndIncidenciasSubtipo_IdIn(tipoFiltrar, subtipoIds);
-		} else if (tipoFiltrar != null && subtipoIds.isEmpty() && estadoFiltrar != null) {
-
-			return incidenciaRepository.findByTipoAndEstado(tipoFiltrar, estadoFiltrar);
-		} else if (tipoFiltrar == null && !subtipoIds.isEmpty() && estadoFiltrar != null) {
-
-			return incidenciaRepository.findByIncidenciasSubtipo_IdInAndEstado(subtipoIds, estadoFiltrar);
-		} else {
-
-			return incidenciaRepository.findByTipoAndIncidenciasSubtipo_IdInAndEstado(tipoFiltrar, subtipoIds,
-					estadoFiltrar);
-		}
+        if (date != null) {
+            query.setParameter("fechaCreacion", date);
+        }
+        return query.getResultList();
 	}
 
 	public List<Incidencia> getByTipo(String tipo) {

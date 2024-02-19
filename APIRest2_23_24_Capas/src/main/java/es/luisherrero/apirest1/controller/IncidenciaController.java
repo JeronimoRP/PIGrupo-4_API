@@ -1,9 +1,11 @@
 package es.luisherrero.apirest1.controller;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,8 +36,10 @@ public class IncidenciaController {
 	public List<Incidencia> getIncidenciasByFiltro(
 	        @RequestParam(name = "tipo", required = false) String tipo,
 	        @RequestParam(name = "subtipoNombre", required = false) String subtipoNombre,
-	        @RequestParam(name = "estado", required = false) String estado) {
-	    return incidenciaService.getByTipoAndIncidenciasSubtipoAndEstado(tipo, subtipoNombre, estado);
+	        @RequestParam(name = "estado", required = false) String estado,
+	        @RequestParam(name = "fechaCreacion", required = false)
+	        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime fechaCreacion) {
+	    return incidenciaService.getByTipoAndIncidenciasSubtipoAndEstado(tipo, subtipoNombre, estado, fechaCreacion);
 	}
 	
 	@GetMapping("/incidencias/tipo")
@@ -46,6 +50,7 @@ public class IncidenciaController {
 	        return Collections.emptyList();
 	    }
 	}
+	
 	@GetMapping("/subtipo/id/{subtipoId}")
     public List<Incidencia> getIncidenciasBySubtipo(@PathVariable int subtipoId) {
         return incidenciaService.getBySubtipo(subtipoId);
