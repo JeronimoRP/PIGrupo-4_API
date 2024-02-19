@@ -17,13 +17,13 @@ import es.grupo4.apirest.model.Personal;
 import es.grupo4.apirest.service.PersonalService;
 
 @RestController
-@RequestMapping("/a")
+@RequestMapping("/personal")
 public class PersonalController {
 
 	@Autowired
 	private PersonalService personalService;
 	
-	@GetMapping("/personal")
+	@GetMapping("/getProfesores")
 	public List<Personal> getPersonal(){
 		return this.personalService.getPersonals();
 	}
@@ -33,21 +33,21 @@ public class PersonalController {
 	    return personalService.savePersonal(personal);
 	}
 	
-	@GetMapping(path = "/{id}")
+	@GetMapping("getProfesor/{id}")
 	public Optional<Personal> getPersonalById(@PathVariable("id") int id){
 		return  personalService.getById(id);
 	}
 	
-	 @GetMapping("/perfil")
-	 public String obtenerPerfilUsuario(Personal personal) {
-	        Perfile perfil = personalService.obtenerPerfilUsuario(personal);
+	@GetMapping("/perfil")
+	public String obtenerPerfilUsuario(Integer id) {
+	        String perfil = personalService.obtenerPerfilUsuario(id);
 
 	        if (perfil != null) {
-	            return perfil.getPerfil().toLowerCase();
+	            return perfil.toLowerCase();
 	        } else {
 	            return "Usuario no válido";
 	        }
-	    }
+	}
 	 
 	@DeleteMapping(path = "/{id}")
 	public String deletePersonalById(@PathVariable("id") int id) {

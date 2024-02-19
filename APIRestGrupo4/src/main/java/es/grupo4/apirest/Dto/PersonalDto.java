@@ -156,4 +156,34 @@ public class PersonalDto {
         }else dto.setDepartamento(null);
         return dto;
     }
+
+    public static Personal toEntity(PersonalDto dto){
+        Personal prof=new Personal();
+        prof.setId(dto.getId());
+        prof.setNombre(dto.getNombre());
+        prof.setApellido1(dto.getApellido1());
+        if(dto.getDni()!=null){
+            prof.setDni(dto.getDni());
+        }else prof.setDni(null);
+        if(dto.getActivo()!=0){
+            prof.setActivo(dto.getActivo());
+        }else prof.setActivo((byte)0);
+        if(dto.getApellido2()!=null){
+            prof.setApellido2(dto.getApellido2());
+        }else prof.setApellido2(null);
+        if(dto.getDireccion()!=null){
+            prof.setDireccion(dto.getDireccion());
+        }else prof.setDireccion(null);
+        if(dto.getLocalidad()!=null){
+            prof.setLocalidad(dto.getLocalidad());
+        }else prof.setLocalidad(null);
+        if(dto.getCp()!=null){
+            prof.setCp(dto.getCp());
+        }else prof.setCp(null);
+        if(dto.getTlf()!=null){
+            prof.setTlf(dto.getTlf());
+        }else prof.setTlf(null);
+        //prof.setDepartamento(departamentoRepository.getDepartamentoByNombre(dto.getDepartamento()).orElse(null));
+        return prof;
+    }
 }

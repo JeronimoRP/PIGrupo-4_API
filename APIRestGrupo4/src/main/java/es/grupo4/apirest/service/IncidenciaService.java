@@ -1,11 +1,13 @@
 package es.grupo4.apirest.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import es.grupo4.apirest.repository.IIncidenciaRepository;
-import es.grupo4.apirest.repository.IPersonalRepository;
+import es.grupo4.apirest.Dto.IncidenciaDto;
+import es.grupo4.apirest.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import es.grupo4.apirest.model.Incidencia;
@@ -19,27 +21,56 @@ public class IncidenciaService {
 	
 	@Autowired
     IPersonalRepository personalRepository;
+
+	@Autowired
+	IEquipoRepository equipoRepository;
+
+	@Autowired
+	IncidenciasSubtipoRepository incidenciasSubtipoRepository;
 	
-	public List<Incidencia> getIncidencias() {
-		return this.incidenciaRepository.findAll();
+	public List<IncidenciaDto> getIncidencias() {
+		List<Incidencia> lista=incidenciaRepository.findAll();
+		List<IncidenciaDto> listaDto=new ArrayList<IncidenciaDto>();
+		for(Incidencia i:lista){
+			listaDto.add(IncidenciaDto.fromEntity(i));
+		}
+		return listaDto;
 	}
 	
-	public Incidencia saveIncidencia(Incidencia incidencia) {
-		return incidenciaRepository.save(incidencia);
+	public void saveIncidencia(IncidenciaDto dto)
+	{
+		Incidencia incidencia=IncidenciaDto.toEntity(dto);
+		if (dto.getEquipo() != null) {
+			incidencia.setEquipo(equipoRepository.getEquipoByEtiqueta(dto.getEquipo()).orElse(null));
+		}
+		if (dto.getIncidenciasSubtipo() != null) {
+			incidencia.setIncidenciasSubtipo(incidenciasSubtipoRepository.getSubtipoByNombre(dto.getIncidenciasSubtipo()).orElse(null));
+		}
+		incidenciaRepository.save(incidencia);
 	}
 	
 	public Optional<Incidencia> getById(int id) {
 		return incidenciaRepository.findById(id);
 	}
 	
-	public Incidencia updateById(Incidencia request, int id) {
-		Incidencia incidencia = incidenciaRepository.findById(id).get();
-		incidencia.setDescripcion(request.getDescripcion());
-		incidencia.setEstado(request.getEstado());
-		incidencia.setFechaCierre(request.getFechaCierre());
-		incidencia.setTipo(request.getTipo());
-		incidencia.setIncidenciasSubtipo(request.getIncidenciasSubtipo());
-		return incidencia;
+	public void updateById(IncidenciaDto request) {
+		Incidencia incidencia = incidenciaRepository.findById(request.getNum()).get();
+		if(request.getDescripcion()!=null){
+			incidencia.setDescripcion(request.getDescripcion());
+		}
+		if(request.getEstado()!=null){
+			incidencia.setEstado(request.getEstado());
+		}
+		if(request.getFechaCierre()!=null){
+			incidencia.setFechaCierre(request.getFechaCierre());
+		}
+		if(request.getTipo()!=null){
+			incidencia.setTipo(request.getTipo());
+		}
+		if(request.getIncidenciasSubtipo()!=null){
+			incidencia.setIncidenciasSubtipo(incidenciasSubtipoRepository.getSubtipoByNombre(request.getIncidenciasSubtipo()).orElse(null));
+		}
+
 	}
 	
 	public void asignarIncidencia(int idPersonal, int idIncidencia) {

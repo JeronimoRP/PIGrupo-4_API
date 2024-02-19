@@ -2,7 +2,9 @@ package es.grupo4.apirest.controller;
 
 import java.util.List;
 
+import es.grupo4.apirest.Dto.IncidenciaDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Description;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,25 +19,27 @@ import es.grupo4.apirest.model.Incidencia;
 import es.grupo4.apirest.service.IncidenciaService;
 
 @RestController
-@RequestMapping("/ap")
+@RequestMapping("/incidencias")
 public class IncidenciaController {
 
 	@Autowired
 	private IncidenciaService incidenciaService;
 	
-	@GetMapping("/incidencias")
-	public List<Incidencia> getAulas(){
+	@GetMapping("/getincidencias")
+	@Description("Método para obtener todas las incidencias")
+	public List<IncidenciaDto> getIncidencias(){
 		return incidenciaService.getIncidencias();
 	}
 	
-	@PostMapping
-	public Incidencia saveIncidencia(@RequestBody Incidencia incidencia) {
-	    return incidenciaService.saveIncidencia(incidencia);
+	@PostMapping("/saveIncidencia")
+	@Description("Método para guardar una incidencia")
+	public void saveIncidencia(@RequestBody IncidenciaDto dto) {
+	    incidenciaService.saveIncidencia(dto);
 	}
 	
-	@PutMapping
-	public Incidencia updateIncidenciaById(@RequestBody Incidencia incidencia, int id) {
-		return incidenciaService.updateById(incidencia, id);
+	@PutMapping("/updateIncidencia")
+	public void updateIncidenciaById(@RequestBody IncidenciaDto dto) {
+		incidenciaService.updateById(dto);
 	}
 	
 	@PostMapping("/asignarincidencia")
@@ -46,7 +50,7 @@ public class IncidenciaController {
         return "Incidencia asignada correctamente al usuario con ID: " + idUsuario;
     }
 	
-	@DeleteMapping(path = "/{id}")
+	@DeleteMapping("deleteIncidencia/{id}")
 	public String deleteIncidenciaById(@PathVariable("id") int id) {
 		boolean deleted = incidenciaService.deletedIncidencia(id);
 		if (deleted) {
@@ -54,5 +58,10 @@ public class IncidenciaController {
 		}else {
 			return "Error al eliminar aula";
 		}
+	}
+
+	@GetMapping("profesorCreador/{idProfesor}")
+	public List<IncidenciaDto> getIncidenciasByProfesor(@PathVariable("idProfesor")int id){
+		return null;
 	}
 }

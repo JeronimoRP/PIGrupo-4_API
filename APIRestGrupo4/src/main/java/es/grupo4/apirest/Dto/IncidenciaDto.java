@@ -182,4 +182,49 @@ public class IncidenciaDto {
         }
         return dto;
     }
+
+    public static Incidencia toEntity(IncidenciaDto dto){
+        Incidencia incidencia=new Incidencia();
+        incidencia.setNum(dto.getNum());
+        if (dto.getAdjuntoUrl() != null) {
+            incidencia.setAdjuntoUrl(dto.getAdjuntoUrl());
+        } else {
+            incidencia.setAdjuntoUrl(null);
+        }
+        if (dto.getDescripcion() != null) {
+            incidencia.setDescripcion(dto.getDescripcion());
+        } else {
+            incidencia.setDescripcion(null);
+        }
+        if (dto.getEstado() != null) {
+            incidencia.setEstado(dto.getEstado());
+        } else {
+            incidencia.setEstado(null);
+        }
+        if (dto.getFechaCreacion() != null) {
+            incidencia.setFechaCreacion(dto.getFechaCreacion());
+        } else {
+            incidencia.setFechaCreacion(null);
+        }
+        if (dto.getFechaCierre() != null) {
+            incidencia.setFechaCierre(dto.getFechaCierre());
+        } else {
+            incidencia.setFechaCierre(null);
+        }
+        if (dto.getTipo() != null) {
+            incidencia.setTipo(dto.getTipo());
+        } else {
+            incidencia.setTipo(null);
+        }
+
+        if (dto.getProfesorIncidencia() != null) {
+            incidencia.setPersonal1(PersonalDto.toEntity(dto.getProfesorIncidencia()));
+        }
+        if (dto.getProfesorAdministrador() != null) {
+            incidencia.setPersonal2(PersonalDto.toEntity(dto.getProfesorAdministrador()));
+        }else{
+            dto.setProfesorAdministrador(null);
+        }
+        return incidencia;
+    }
 }
