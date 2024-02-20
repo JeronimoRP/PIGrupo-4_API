@@ -113,7 +113,7 @@ public class Incidencia implements Serializable {
 		return tiempo_dec;
 	}
 
-	public void setTiempo_dc(Time tiempo_dec) {
+	public void setTiempo_dec(Time tiempo_dec) {
 		this.tiempo_dec = tiempo_dec;
 	}
 

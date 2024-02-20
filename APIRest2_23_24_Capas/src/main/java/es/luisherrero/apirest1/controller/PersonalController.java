@@ -39,7 +39,7 @@ public class PersonalController {
 	public Optional<Personal> getPersonalById(@PathVariable("id") int id) {
 		return personalService.getById(id);
 	}
-
+	
 	@GetMapping("/nombre/apellidos")
 	public Personal getPersonalById(@RequestParam(name = "nombre") String nombre,
 			@RequestParam(name = "primerApellido") String apellido1,

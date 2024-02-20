@@ -38,6 +38,10 @@ public class IncidenciaService {
 		return this.incidenciaRepository.findAll();
 	}
 
+	 public List<Incidencia> getIncidenciasByCreadorId(int creadorId) {
+	        return incidenciaRepository.findByPersonal1Id(creadorId);
+	    }
+	
 	public Incidencia saveIncidencia(Incidencia incidencia) {
 		return incidenciaRepository.save(incidencia);
 	}

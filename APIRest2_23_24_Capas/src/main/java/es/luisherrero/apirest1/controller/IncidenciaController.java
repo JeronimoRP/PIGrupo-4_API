@@ -51,6 +51,11 @@ public class IncidenciaController {
 	    }
 	}
 	
+	@GetMapping("/creador/{creadorId}")
+    public List<Incidencia> getIncidenciasByCreador(@PathVariable int creadorId) {
+        return incidenciaService.getIncidenciasByCreadorId(creadorId);
+    }
+	
 	@GetMapping("/subtipo/id/{subtipoId}")
     public List<Incidencia> getIncidenciasBySubtipo(@PathVariable int subtipoId) {
         return incidenciaService.getBySubtipo(subtipoId);
