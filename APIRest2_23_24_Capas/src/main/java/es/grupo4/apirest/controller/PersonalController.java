@@ -3,6 +3,8 @@ package es.grupo4.apirest.controller;
 import java.util.List;
 import java.util.Optional;
 
+import es.grupo4.apirest.Dto.PersonalInputDto;
+import es.grupo4.apirest.Dto.PersonalOutputDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -70,5 +72,9 @@ public class PersonalController {
 		} else {
 			return "Error al eliminar aula";
 		}
+	}
+	@GetMapping("/login")
+	public PersonalOutputDto getIncidenciasUsuario(@RequestBody PersonalInputDto dto){
+		return personalService.getIncidenciasUsuario(dto);
 	}
 }

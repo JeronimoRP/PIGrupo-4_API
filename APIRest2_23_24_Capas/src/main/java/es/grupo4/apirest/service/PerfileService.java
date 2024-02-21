@@ -3,7 +3,11 @@ package es.grupo4.apirest.service;
 import java.util.List;
 import java.util.Optional;
 
+import es.grupo4.apirest.Dto.IncidenciaDto;
+import es.grupo4.apirest.Dto.PersonalInputDto;
+import es.grupo4.apirest.Dto.PersonalOutputDto;
 import es.grupo4.apirest.model.Perfile;
+import es.grupo4.apirest.repository.IncidenciaRepository;
 import es.grupo4.apirest.repository.PerfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

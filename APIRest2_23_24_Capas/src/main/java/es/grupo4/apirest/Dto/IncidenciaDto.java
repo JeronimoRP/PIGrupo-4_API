@@ -21,13 +21,13 @@ public class IncidenciaDto {
 
     private LocalDateTime fechaCreacion;
 
-    private IncidenciaSubtipoDto tipo;
+    private String tipo;
 
     private List<ComentarioDto> comentarios;
 
     private String equipo;
 
-    private String incidenciasSubtipo;
+    private IncidenciaSubtipoDto incidenciasSubtipo;
 
     private PersonalDto profesorIncidencia;
 
@@ -82,11 +82,11 @@ public class IncidenciaDto {
         this.fechaCreacion = fechaCreacion;
     }
 
-    public IncidenciaSubtipoDto getTipo() {
+    public String getTipo() {
         return tipo;
     }
 
-    public void setTipo(IncidenciaSubtipoDto tipo) {
+    public void setTipo(String tipo) {
         this.tipo = tipo;
     }
 
@@ -106,11 +106,11 @@ public class IncidenciaDto {
         this.equipo = equipo;
     }
 
-    public String getIncidenciasSubtipo() {
+    public IncidenciaSubtipoDto getIncidenciasSubtipo() {
         return incidenciasSubtipo;
     }
 
-    public void setIncidenciasSubtipo(String incidenciasSubtipo) {
+    public void setIncidenciasSubtipo(IncidenciaSubtipoDto incidenciasSubtipo) {
         this.incidenciasSubtipo = incidenciasSubtipo;
     }
 
@@ -159,7 +159,7 @@ public class IncidenciaDto {
             dto.setFechaCierre(null);
         }
         if (inci.getTipo() != null) {
-            dto.setTipo(IncidenciaSubtipoDto.fromEntity(inci.getIncidenciasSubtipo()));
+            dto.setTipo(inci.getTipo());
         } else {
             dto.setTipo(null);
         }
@@ -169,7 +169,7 @@ public class IncidenciaDto {
             dto.setEquipo(null);
         }
         if (inci.getIncidenciasSubtipo() != null) {
-            dto.setIncidenciasSubtipo(inci.getIncidenciasSubtipo().getSubtipoNombre());
+            dto.setIncidenciasSubtipo(IncidenciaSubtipoDto.fromEntity(inci.getIncidenciasSubtipo()));
         } else {
             dto.setIncidenciasSubtipo(null);
         }
@@ -212,12 +212,16 @@ public class IncidenciaDto {
         } else {
             incidencia.setFechaCierre(null);
         }
-        if (dto.getTipo() != null) {
-            incidencia.setIncidenciasSubtipo(IncidenciaSubtipoDto.toEntity(dto.getTipo()));
+        if(dto.getTipo()!=null){
+            incidencia.setTipo(dto.getTipo());
+        }else{
+            incidencia.setTipo(null);
+        }
+        if (dto.getIncidenciasSubtipo() != null) {
+            incidencia.setIncidenciasSubtipo(IncidenciaSubtipoDto.toEntity(dto.getIncidenciasSubtipo()));
         } else {
             incidencia.setIncidenciasSubtipo(null);
         }
-
         if (dto.getProfesorIncidencia() != null) {
             incidencia.setPersonal1(PersonalDto.toEntity(dto.getProfesorIncidencia()));
         }

@@ -2,6 +2,15 @@ package es.grupo4.apirest.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import es.grupo4.apirest.Dto.IncidenciaDto;
+import es.grupo4.apirest.Dto.PersonalInputDto;
+import es.grupo4.apirest.Dto.PersonalOutputDto;
+import es.grupo4.apirest.model.Incidencia;
+import es.grupo4.apirest.repository.IncidenciaRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +27,12 @@ public class PersonalService {
 
 	@Autowired
     PerfileRepository perfileRepository;
+
+	@Autowired
+	IncidenciaRepository incidenciaRepository;
+
+	@PersistenceContext
+	EntityManager em;
 
 	public List<Personal> getPersonals() {
 		return this.personalRepository.findAll();
@@ -55,5 +70,31 @@ public class PersonalService {
 	public Optional<Perfile> obtenerPerfilUsuario(Personal personal) {
 	      return personal != null ? perfileRepository.findById(personal.getId()) : null;
 	 }
+
+	public PersonalOutputDto getIncidenciasUsuario(PersonalInputDto dto){
+		PersonalOutputDto usuario=this.getUsuario(dto);
+		if(usuario!=null){
+			usuario.setNombre(this.getNombre(usuario.getPersonalId()));
+			List<Incidencia> listaIncidencias=incidenciaRepository.findByPersonal1Id(usuario.getPersonalId());
+			usuario.setIncidencias(listaIncidencias.stream().map(x->IncidenciaDto.fromEntity(x)).collect(Collectors.toList()));
+
+		}
+		return usuario;
+	}
+
+	private PersonalOutputDto getUsuario(PersonalInputDto dto){
+		String sql=String.format("select personal_id from perfiles where educantabria='%s' and password='%s'",dto.getEducantabria(),dto.getPassword());
+		Integer id =(Integer)em.createQuery(sql).getSingleResult();
+		if(id!=null){
+			PersonalOutputDto usuario=new PersonalOutputDto();
+			usuario.setPersonalId(id);
+			return usuario;
+		}else return null;
+
+	}
+	private String getNombre(Integer id){
+		String sql=String.format("select nombre from personal where id=%d",id);
+		return (String)em.createQuery(sql).getSingleResult();
+	}
 
 }

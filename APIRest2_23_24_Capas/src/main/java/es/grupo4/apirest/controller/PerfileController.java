@@ -3,6 +3,8 @@ package es.grupo4.apirest.controller;
 import java.util.List;
 import java.util.Optional;
 
+import es.grupo4.apirest.Dto.PersonalOutputDto;
+import es.grupo4.apirest.Dto.PersonalInputDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,7 +34,7 @@ public class PerfileController {
 	public Optional<Perfile> getPersonalByDominio(@PathVariable("dominio") String dominio) {
 		return perfileService.getByDominio(dominio);
 	}
-	
+
 	@PostMapping
 	public Perfile savePerfile(@RequestBody Perfile perfile) {
 	    return perfileService.savePerfile(perfile);
