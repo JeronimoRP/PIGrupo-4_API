@@ -41,17 +41,30 @@ public class IncidenciaService {
 	@PersistenceContext
     private EntityManager em;
 
-	public List<Incidencia> getIncidencias() {
-		return this.incidenciaRepository.findAll();
+	public List<IncidenciaDto> getIncidencias() {
+
+		return this.incidenciaRepository.findAll()
+				.stream()
+				.map(x->IncidenciaDto.fromEntity(x))
+				.collect(Collectors.toList());
 	}
 
-	 public List<Incidencia> getIncidenciasByCreadorId(int creadorId) {
-	        return incidenciaRepository.findByPersonal1Id(creadorId);
+	 public List<IncidenciaDto> getIncidenciasByCreadorId(int creadorId) {
+	        return incidenciaRepository.findByPersonal1Id(creadorId)
+					.stream()
+					.map(x->IncidenciaDto.fromEntity(x))
+					.collect(Collectors.toList());
 	    }
-	
-	public Incidencia saveIncidencia(Incidencia incidencia) {
-		return incidenciaRepository.save(incidencia);
+
+	public void saveIncidencia(IncidenciaDto dto)
+	{
+		Incidencia incidencia=IncidenciaDto.toEntity(dto);
+		if (dto.getEquipo() != null) {
+			incidencia.setEquipo(equipoRepository.getEquipoByEtiqueta(dto.getEquipo()).orElse(null));
+		}
+		incidenciaRepository.save(incidencia);
 	}
+
 
 	public Optional<Incidencia> getById(int id) {
 		return incidenciaRepository.findById(id);
@@ -126,7 +139,7 @@ public class IncidenciaService {
 
  */
 
-	public void updateById(IncidenciaDto request, int id) {
+	public void updateById(IncidenciaDto request) {
 		Incidencia incidencia = incidenciaRepository.findById(request.getNum()).get();
 		if(request.getDescripcion()!=null){
 			incidencia.setDescripcion(request.getDescripcion());
@@ -137,16 +150,13 @@ public class IncidenciaService {
 		if(request.getFechaCierre()!=null){
 			incidencia.setFechaCierre(request.getFechaCierre());
 		}
-		/*
+
 		if(request.getTipo()!=null){
 			incidencia.setTipo(request.getTipo());
 		}
 		if(request.getIncidenciasSubtipo()!=null){
 			incidencia.setIncidenciasSubtipo(IncidenciaSubtipoDto.toEntity(request.getIncidenciasSubtipo()));
 		}
-
-		 */
-
 	}
 
 	public void asignarIncidencia(int idPersonal, int idIncidencia) {

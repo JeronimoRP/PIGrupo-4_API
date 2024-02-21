@@ -3,6 +3,7 @@ package es.grupo4.apirest.controller;
 import java.util.List;
 import java.util.Optional;
 
+import es.grupo4.apirest.Dto.PersonalDto;
 import es.grupo4.apirest.Dto.PersonalInputDto;
 import es.grupo4.apirest.Dto.PersonalOutputDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,24 +22,24 @@ import es.grupo4.apirest.model.Personal;
 import es.grupo4.apirest.service.PersonalService;
 
 @RestController
-@RequestMapping("/a")
+@RequestMapping("/personal")
 public class PersonalController {
 
 	@Autowired
 	private PersonalService personalService;
 
-	@GetMapping("/personals")
-	public List<Personal> getPersonal() {
-		return this.personalService.getPersonals();
+	@GetMapping("/listaPersonal")
+	public List<PersonalDto> getPersonal() {
+		return this.personalService.getPersonal();
 	}
 
-	@PostMapping
-	public Personal savePersonal(@RequestBody Personal personal) {
-		return personalService.savePersonal(personal);
+	@PostMapping("/save")
+	public void savePersonal(@RequestBody PersonalDto dto) {
+		personalService.savePersonal(dto);
 	}
 
-	@GetMapping(path = "/{id}")
-	public Optional<Personal> getPersonalById(@PathVariable("id") int id) {
+	@GetMapping("infoPersonal/{id}")
+	public PersonalDto getPersonalById(@PathVariable("id") int id) {
 		return personalService.getById(id);
 	}
 	
@@ -49,22 +50,18 @@ public class PersonalController {
 		return personalService.getByNombreApellidos(nombre, apellido1,apellido2);
 	}
 
-	@GetMapping("/perfil")
-	public String obtenerPerfilUsuario(Personal personal) {
-		Optional<Perfile> perfil = personalService.obtenerPerfilUsuario(personal);
-		if (perfil != null) {
-			return perfil.get().getPerfil().toString();
-		} else {
-			return "Usuario no válido";
-		}
+	@GetMapping("/perfil/{id}")
+	public String obtenerPerfilUsuario(Integer idusuario) {
+		String nombre = personalService.obtenerPerfilUsuario(idusuario);
+		return nombre!=null?nombre:"Usuario no válido";
 	}
 
-	@PutMapping(path = "/{id}")
+	@PutMapping(path = "update/{id}")
 	public Personal updatePersonalById(@RequestBody Personal personal, @PathVariable int id) {
 		return personalService.updateById(personal, id);
 	}
 
-	@DeleteMapping(path = "/{id}")
+	@DeleteMapping(path = "delete/{id}")
 	public String deletePersonalById(@PathVariable("id") int id) {
 		boolean deleted = personalService.deletedPersonal(id);
 		if (deleted) {

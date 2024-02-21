@@ -5,9 +5,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import es.grupo4.apirest.Dto.IncidenciaDto;
+import es.grupo4.apirest.Dto.PersonalDto;
 import es.grupo4.apirest.Dto.PersonalInputDto;
 import es.grupo4.apirest.Dto.PersonalOutputDto;
 import es.grupo4.apirest.model.Incidencia;
+import es.grupo4.apirest.repository.DepartamentoRepository;
 import es.grupo4.apirest.repository.IncidenciaRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -31,19 +33,32 @@ public class PersonalService {
 	@Autowired
 	IncidenciaRepository incidenciaRepository;
 
+	@Autowired
+	DepartamentoRepository departamentoRepository;
+
 	@PersistenceContext
 	EntityManager em;
 
-	public List<Personal> getPersonals() {
-		return this.personalRepository.findAll();
+	public List<PersonalDto> getPersonal() {
+		return this.personalRepository
+				.findAll()
+				.stream()
+				.map(x->PersonalDto.fromEntity(x))
+				.collect(Collectors.toList());
+
 	}
 
-	public Personal savePersonal(Personal personal) {
-		return personalRepository.save(personal);
+	public void savePersonal(PersonalDto dto) {
+		Personal prof=PersonalDto.toEntity(dto);
+		prof.setDepartamento(departamentoRepository.getDepartamentoByNombre(dto.getDepartamento()).orElse(null));
+		personalRepository.save(prof);
 	}
 
-	public Optional<Personal> getById(int id) {
-		return personalRepository.findById(id);
+	public PersonalDto getById(int id) {
+
+		Personal prof= personalRepository.findById(id).orElse(null);
+		return prof!=null? PersonalDto.fromEntity(prof):null;
+
 	}
 	
 	public Personal getByNombreApellidos(String nombre, String apellido1, String apellido2) {
@@ -66,10 +81,13 @@ public class PersonalService {
 			return false;
 		}
 	}
-
-	public Optional<Perfile> obtenerPerfilUsuario(Personal personal) {
-	      return personal != null ? perfileRepository.findById(personal.getId()) : null;
-	 }
+	public String obtenerPerfilUsuario(Integer idProfesor) {
+		String sql="select perfil from perfiles where personalId="+idProfesor;
+		Perfile perfil=(Perfile) em.createQuery(sql).getSingleResult();
+		if(perfil!=null) {
+			return perfil.getPerfil().toString();
+		}else return null;
+	}
 
 	public PersonalOutputDto getIncidenciasUsuario(PersonalInputDto dto){
 		PersonalOutputDto usuario=this.getUsuario(dto);

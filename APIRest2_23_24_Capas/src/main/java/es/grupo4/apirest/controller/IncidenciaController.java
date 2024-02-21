@@ -30,7 +30,7 @@ public class IncidenciaController {
 	private IncidenciaService incidenciaService;
 
 	@GetMapping("/incidencias")
-	public List<Incidencia> getIncidencias() {
+	public List<IncidenciaDto> getIncidencias() {
 		return incidenciaService.getIncidencias();
 	}
 
@@ -66,19 +66,19 @@ public class IncidenciaController {
 	}
 
 	 */
-	@GetMapping("/creador/{creadorId}")
-	public List<Incidencia> getIncidenciasByCreador(@PathVariable int creadorId) {
+	@GetMapping("/incidencias/{creadorId}")
+	public List<IncidenciaDto> getIncidenciasByCreador(@PathVariable int creadorId) {
 		return incidenciaService.getIncidenciasByCreadorId(creadorId);
 	}
 	
-	@PostMapping
-	public Incidencia saveIncidencia(@RequestBody Incidencia incidencia) {
-		return incidenciaService.saveIncidencia(incidencia);
+	@PostMapping("/save")
+	public void saveIncidencia(@RequestBody IncidenciaDto incidenciaDto) {
+		incidenciaService.saveIncidencia(incidenciaDto);
 	}
 
-	@PutMapping(path = "/{id}")
-	public void updateIncidenciaById(@RequestBody IncidenciaDto incidenciaDto, @PathVariable int id) {
-		incidenciaService.updateById(incidenciaDto, id);
+	@PutMapping(path = "update/")
+	public void updateIncidenciaById(@RequestBody IncidenciaDto incidenciaDto) {
+		incidenciaService.updateById(incidenciaDto);
 	}
 
 	@PostMapping("/asignarincidencia")
@@ -89,7 +89,7 @@ public class IncidenciaController {
 		return "Incidencia asignada correctamente al usuario con ID: " + idUsuario;
 	}
 
-	@DeleteMapping(path = "/{id}")
+	@DeleteMapping(path = "delete/{id}")
 	public String deleteIncidenciaById(@PathVariable("id") int id) {
 		boolean deleted = incidenciaService.deletedIncidencia(id);
 		if (deleted) {
