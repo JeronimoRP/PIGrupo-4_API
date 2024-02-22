@@ -1,8 +1,15 @@
 package es.grupo4.apirest.Dto;
 
+import es.grupo4.apirest.constant.Utils;
 import es.grupo4.apirest.model.*;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
@@ -33,6 +40,25 @@ public class IncidenciaDto {
 
     private PersonalDto profesorAdministrador;
 
+    private String fichero;
+
+    private String extension;
+
+    public String getFichero() {
+        return fichero;
+    }
+
+    public void setFichero(String fichero) {
+        this.fichero = fichero;
+    }
+
+    public String getExtension() {
+        return extension;
+    }
+
+    public void setExtension(String extension) {
+        this.extension = extension;
+    }
 
     public int getNum() {
         return num;
@@ -181,6 +207,11 @@ public class IncidenciaDto {
         }else{
             dto.setProfesorAdministrador(null);
         }
+        if(inci.getAdjuntoUrl()!=null){
+            File file=new File(Utils.path+inci.getAdjuntoUrl());
+            dto.setFichero(encodeFileToBase64(file));
+            dto.setExtension(FilenameUtils.getExtension(file.getName()));
+        }
         return dto;
     }
 
@@ -230,6 +261,31 @@ public class IncidenciaDto {
         }else{
             dto.setProfesorAdministrador(null);
         }
+        if(dto.getAdjuntoUrl()!=null){
+
+        }
+
+
         return incidencia;
+    }
+
+    private static String encodeFileToBase64(File file) {
+        try {
+            byte[] fileContent = Files.readAllBytes(file.toPath());
+            return Base64.getEncoder().encodeToString(fileContent);
+        } catch (IOException e) {
+            throw new IllegalStateException("Fallo al codificar el archivo " + file, e);
+        }
+    }
+
+    private static File decodeFileFromBase64(String fic, String url){
+        try{
+            File file=new File(Utils.path+url);
+            byte[] fileContent=Base64.getDecoder().decode(fic);
+            FileUtils.writeByteArrayToFile(file, fileContent);
+            return file;
+        }catch (IOException e) {
+            throw new IllegalStateException("Fallo al codificar el archivo " + fic, e);
+        }
     }
 }
