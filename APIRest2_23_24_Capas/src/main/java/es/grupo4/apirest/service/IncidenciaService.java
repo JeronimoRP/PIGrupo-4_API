@@ -6,16 +6,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import es.grupo4.apirest.Dto.ComentarioDto;
 import es.grupo4.apirest.Dto.IncidenciaDto;
 import es.grupo4.apirest.Dto.IncidenciaFilterDto;
 import es.grupo4.apirest.Dto.IncidenciaSubtipoDto;
+import es.grupo4.apirest.model.Comentario;
 import es.grupo4.apirest.model.Incidencia;
 import es.grupo4.apirest.model.IncidenciasSubtipo;
 import es.grupo4.apirest.model.Personal;
-import es.grupo4.apirest.repository.EquipoRepository;
-import es.grupo4.apirest.repository.IncidenciaRepository;
-import es.grupo4.apirest.repository.IncidenciasSubtipoRepository;
-import es.grupo4.apirest.repository.PersonalRepository;
+import es.grupo4.apirest.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +36,9 @@ public class IncidenciaService {
 
 	@Autowired
 	IncidenciasSubtipoRepository incidenciasSubtipoRepository;
-	
+
+	@Autowired
+	ComentarioRepository comentarioRepository;
 	@PersistenceContext
     private EntityManager em;
 
@@ -61,6 +62,21 @@ public class IncidenciaService {
 		Incidencia incidencia=IncidenciaDto.toEntity(dto);
 		if (dto.getEquipo() != null) {
 			incidencia.setEquipo(equipoRepository.getEquipoByEtiqueta(dto.getEquipo()).orElse(null));
+		}
+		if (dto.getComentarios() != null){
+			Comentario comentario = new Comentario();
+			List<ComentarioDto> comentariosDto = dto.getComentarios().stream()
+					.map(comentario1 -> {
+						ComentarioDto nuevoComentarioDto = new ComentarioDto();
+						nuevoComentarioDto.setTexto(nuevoComentarioDto.getTexto() + "\n" + comentario1.getTexto());
+						return nuevoComentarioDto;
+					})
+					.collect(Collectors.toList());
+			comentariosDto.forEach(comentarioDto -> comentario.setTexto(comentarioDto.getTexto()));
+			comentario.setIncidencia(incidencia);
+			comentario.setPersonal(incidencia.getPersonal1());
+			comentario.setAdjuntoUrl(incidencia.getAdjuntoUrl());
+			comentarioRepository.save(comentario);
 		}
 		incidenciaRepository.save(incidencia);
 	}

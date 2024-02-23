@@ -261,8 +261,9 @@ public class IncidenciaDto {
         }
         if(dto.getAdjuntoUrl()!=null){
 
-        }
+        }else {
 
+        }
 
         return incidencia;
     }

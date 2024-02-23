@@ -26,7 +26,6 @@ import es.grupo4.apirest.service.IncidenciaService;
 public class IncidenciaController {
 
 	@Autowired
-
 	private IncidenciaService incidenciaService;
 
 	@GetMapping("/incidencias")
@@ -64,7 +63,6 @@ public class IncidenciaController {
 	public List<Incidencia> getIncidenciasByEstado(@RequestParam(name = "estado") String estado) {
 		return incidenciaService.getByEstado(estado);
 	}
-
 	 */
 	@GetMapping("/incidencias/{creadorId}")
 	public List<IncidenciaDto> getIncidenciasByCreador(@PathVariable int creadorId) {
