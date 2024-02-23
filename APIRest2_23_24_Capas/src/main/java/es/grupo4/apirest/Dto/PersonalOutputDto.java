@@ -22,4 +22,12 @@ public class PersonalOutputDto {
     public Integer getPersonalId() {
         return personalId;
     }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public List<IncidenciaDto> getIncidencias() {
+        return incidencias;
+    }
 }

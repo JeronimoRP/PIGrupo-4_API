@@ -101,7 +101,7 @@ public class PersonalService {
 	}
 
 	private PersonalOutputDto getUsuario(PersonalInputDto dto){
-		String sql=String.format("select personal_id from perfiles where educantabria='%s' and password='%s'",dto.getEducantabria(),dto.getPassword());
+		String sql=String.format("select personalId from Perfile where educantabria='%s' and password='%s'",dto.getEducantabria(),dto.getPassword());
 		Integer id =(Integer)em.createQuery(sql).getSingleResult();
 		if(id!=null){
 			PersonalOutputDto usuario=new PersonalOutputDto();
@@ -111,7 +111,7 @@ public class PersonalService {
 
 	}
 	private String getNombre(Integer id){
-		String sql=String.format("select nombre from personal where id=%d",id);
+		String sql=String.format("select nombre from Personal where id=%d",id);
 		return (String)em.createQuery(sql).getSingleResult();
 	}
 

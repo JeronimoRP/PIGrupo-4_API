@@ -1,5 +1,6 @@
 package es.grupo4.apirest.Dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import es.grupo4.apirest.constant.Utils;
 import es.grupo4.apirest.model.*;
 import org.apache.commons.io.FileUtils;
@@ -23,9 +24,9 @@ public class IncidenciaDto {
     private String descripcion;
 
     private String estado;
-
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime fechaCierre;
-
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime fechaCreacion;
 
     private String tipo;
@@ -159,11 +160,7 @@ public class IncidenciaDto {
     public static IncidenciaDto fromEntity(Incidencia inci){
         IncidenciaDto dto=new IncidenciaDto();
         dto.setNum(inci.getNum());
-        if (inci.getAdjuntoUrl() != null) {
-            dto.setAdjuntoUrl(inci.getAdjuntoUrl());
-        } else {
-            dto.setAdjuntoUrl(null);
-        }
+
         if (inci.getDescripcion() != null) {
             dto.setDescripcion(inci.getDescripcion());
         } else {
@@ -207,7 +204,7 @@ public class IncidenciaDto {
         }else{
             dto.setProfesorAdministrador(null);
         }
-        if(inci.getAdjuntoUrl()!=null){
+         if(inci.getAdjuntoUrl()!=null){
             File file=new File(Utils.path+inci.getAdjuntoUrl());
             dto.setFichero(encodeFileToBase64(file));
             dto.setExtension(FilenameUtils.getExtension(file.getName()));
@@ -218,6 +215,7 @@ public class IncidenciaDto {
     public static Incidencia toEntity(IncidenciaDto dto){
         Incidencia incidencia=new Incidencia();
         incidencia.setNum(dto.getNum());
+
         if (dto.getAdjuntoUrl() != null) {
             incidencia.setAdjuntoUrl(dto.getAdjuntoUrl());
         } else {

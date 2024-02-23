@@ -93,7 +93,7 @@ public class IncidenciaController {
 	public String deleteIncidenciaById(@PathVariable("id") int id) {
 		boolean deleted = incidenciaService.deletedIncidencia(id);
 		if (deleted) {
-			return "Incidencia con id " + id + "eliminado correctamente";
+			return "Incidencia con id " + id + " eliminado correctamente";
 		} else {
 			return "Error al eliminar aula";
 		}

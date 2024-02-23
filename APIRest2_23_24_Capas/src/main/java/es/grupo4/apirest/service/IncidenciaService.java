@@ -164,8 +164,8 @@ public class IncidenciaService {
 		Incidencia incidencia = incidenciaRepository.findById(idIncidencia).orElse(null);
 
 		if (personal != null && incidencia != null) {
+			incidencia.setPersonal2(personal);
 			incidenciaRepository.save(incidencia);
-			incidencia.setPersonal1(personal);
 		} else {
 			throw new IllegalArgumentException("Usuario o incidencia no encontrados");
 		}
