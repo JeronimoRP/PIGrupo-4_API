@@ -1,7 +1,10 @@
 package es.grupo4.apirest.service;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -49,7 +52,13 @@ public class IncidenciaService {
 				.map(x->IncidenciaDto.fromEntity(x))
 				.collect(Collectors.toList());
 	}
+	public List<Incidencia> getIncidenciasSinDTO() {
+		return this.incidenciaRepository.findAll();
+	}
 
+	public List<Incidencia> getByEstado(String estado) {
+		return incidenciaRepository.findByEstado(estado);
+	}
 	 public List<IncidenciaDto> getIncidenciasByCreadorId(int creadorId) {
 	        return incidenciaRepository.findByPersonal1Id(creadorId)
 					.stream()
@@ -57,28 +66,9 @@ public class IncidenciaService {
 					.collect(Collectors.toList());
 	    }
 
-	public void saveIncidencia(IncidenciaDto dto)
-	{
-		Incidencia incidencia=IncidenciaDto.toEntity(dto);
-		if (dto.getEquipo() != null) {
-			incidencia.setEquipo(equipoRepository.getEquipoByEtiqueta(dto.getEquipo()).orElse(null));
-		}
-		if (dto.getComentarios() != null){
-			Comentario comentario = new Comentario();
-			List<ComentarioDto> comentariosDto = dto.getComentarios().stream()
-					.map(comentario1 -> {
-						ComentarioDto nuevoComentarioDto = new ComentarioDto();
-						nuevoComentarioDto.setTexto(nuevoComentarioDto.getTexto() + "\n" + comentario1.getTexto());
-						return nuevoComentarioDto;
-					})
-					.collect(Collectors.toList());
-			comentariosDto.forEach(comentarioDto -> comentario.setTexto(comentarioDto.getTexto()));
-			comentario.setIncidencia(incidencia);
-			comentario.setPersonal(incidencia.getPersonal1());
-			comentario.setAdjuntoUrl(incidencia.getAdjuntoUrl());
-			comentarioRepository.save(comentario);
-		}
-		incidenciaRepository.save(incidencia);
+	public void saveIncidencia(IncidenciaDto dto) {
+			Incidencia incidencia = IncidenciaDto.toEntity(dto);
+			incidenciaRepository.save(incidencia);
 	}
 
 

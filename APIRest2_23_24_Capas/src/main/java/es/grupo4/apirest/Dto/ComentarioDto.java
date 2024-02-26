@@ -10,12 +10,15 @@ import org.apache.commons.io.FilenameUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Base64;
 
 public class ComentarioDto {
     private int id;
+
+    private int incidenciaNum;
     private String texto;
     private LocalDateTime fechahora;
     private Incidencia incidencia;
@@ -30,6 +33,14 @@ public class ComentarioDto {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getIncidenciaNum() {
+        return incidenciaNum;
+    }
+
+    public void setIncidenciaNum(int incidenciaNum) {
+        this.incidenciaNum = incidenciaNum;
     }
 
     public String getTexto() {
@@ -118,35 +129,38 @@ public class ComentarioDto {
         return dto;
     }
 
-    public static Comentario toEntity(ComentarioDto dto){
+    public static Comentario toEntity(ComentarioDto dto) {
         Comentario comentario = new Comentario();
         comentario.setId(dto.getId());
 
-        if (dto.getFechahora() != null){
-            comentario.setFechahora(java.sql.Date.valueOf(dto.getFechahora().toLocalDate()));
-        }else{
+        if (dto.getFechahora() != null) {
+            comentario.setFechahora(Timestamp.valueOf(dto.getFechahora())); // Convert LocalDateTime to Timestamp
+        } else {
             comentario.setFechahora(null);
         }
-        if(dto.getIncidencia() != null){
-            comentario.setIncidencia(dto.getIncidencia());
-        }else{
-            comentario.setIncidencia(null);
+
+        if (dto.getIncidenciaNum() > 0) {
+            Incidencia incidencia = new Incidencia();
+            incidencia.setNum(dto.getIncidenciaNum());
+            comentario.setIncidencia(incidencia);
+        } else {
+            throw new IllegalArgumentException("IncidenciaNum must be greater than 0");
         }
-        if (dto.getPersonal() != null){
+
+        if (dto.getPersonal() != null) {
             comentario.setPersonal(dto.getPersonal());
-        }else{
+        } else {
             comentario.setPersonal(null);
         }
-        if (dto.getTexto() != null){
-            comentario.setTexto(dto.getTexto());
-        }else {
-            comentario.setTexto(null);
-        }
-        if (dto.getAdjuntoUrl() != null){
 
-        }else{
+        comentario.setTexto(dto.getTexto() != null ? dto.getTexto() : "");
+
+        if (dto.getAdjuntoUrl() != null) {
+
+        } else {
 
         }
+
         return comentario;
     }
     private static String encodeFileToBase64(File file) {

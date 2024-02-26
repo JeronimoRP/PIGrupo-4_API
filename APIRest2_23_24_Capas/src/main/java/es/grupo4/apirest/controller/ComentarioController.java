@@ -1,16 +1,11 @@
 package es.grupo4.apirest.controller;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import es.grupo4.apirest.model.Comentario;
 import es.grupo4.apirest.service.ComentarioService;
@@ -35,6 +30,16 @@ public class ComentarioController {
 	@GetMapping(path = "/{id}")
 	public Optional<Comentario> getComentarioById(@PathVariable("id") int id){
 		return this.comentarioService.getById(id);
+	}
+
+	@GetMapping("/comentarios-por-incidencia")
+	public List<Comentario> getComentariosByIncidencia(@RequestParam("incidencia") String incidenciaStr) {
+		try {
+			int incidencia = Integer.parseInt(incidenciaStr);
+			return this.comentarioService.getComentariosByIncidencia(incidencia);
+		} catch (NumberFormatException e) {
+			return Collections.emptyList();
+		}
 	}
 	
 	@PutMapping(path = "/{id}")

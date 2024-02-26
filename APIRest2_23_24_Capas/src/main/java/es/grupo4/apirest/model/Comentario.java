@@ -25,6 +25,7 @@ public class Comentario implements Serializable {
 	private String texto;
 
 	@ManyToOne
+	@JoinColumn(name = "incidencia_num")
 	private Incidencia incidencia;
 
 	@ManyToOne

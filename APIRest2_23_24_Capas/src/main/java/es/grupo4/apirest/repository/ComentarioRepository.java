@@ -4,9 +4,10 @@ import es.grupo4.apirest.model.Comentario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface ComentarioRepository extends JpaRepository<Comentario, Integer>{
-
+    List<Comentario> findAllByIncidencia_Num(int incidencia);
 }

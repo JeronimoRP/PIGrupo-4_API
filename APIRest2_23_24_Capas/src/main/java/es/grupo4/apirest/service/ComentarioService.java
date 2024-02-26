@@ -17,7 +17,7 @@ public class ComentarioService {
 	public List<Comentario> getComentarios() {
 		return this.comentarioRepository.findAll();
 	}
-	
+	public List<Comentario> getComentariosByIncidencia(int incidencia){return this.comentarioRepository.findAllByIncidencia_Num(incidencia);}
 	public Comentario saveComentario(Comentario comentario) {
 		return this.comentarioRepository.save(comentario);
 	}
