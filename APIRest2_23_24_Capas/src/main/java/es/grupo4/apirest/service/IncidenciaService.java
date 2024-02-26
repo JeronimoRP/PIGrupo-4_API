@@ -6,16 +6,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import es.grupo4.apirest.Dto.ComentarioDto;
 import es.grupo4.apirest.Dto.IncidenciaDto;
 import es.grupo4.apirest.Dto.IncidenciaFilterDto;
 import es.grupo4.apirest.Dto.IncidenciaSubtipoDto;
+import es.grupo4.apirest.model.Comentario;
 import es.grupo4.apirest.model.Incidencia;
 import es.grupo4.apirest.model.IncidenciasSubtipo;
 import es.grupo4.apirest.model.Personal;
-import es.grupo4.apirest.repository.EquipoRepository;
-import es.grupo4.apirest.repository.IncidenciaRepository;
-import es.grupo4.apirest.repository.IncidenciasSubtipoRepository;
-import es.grupo4.apirest.repository.PersonalRepository;
+import es.grupo4.apirest.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +36,9 @@ public class IncidenciaService {
 
 	@Autowired
 	IncidenciasSubtipoRepository incidenciasSubtipoRepository;
-	
+
+	@Autowired
+	ComentarioRepository comentarioRepository;
 	@PersistenceContext
     private EntityManager em;
 
@@ -61,6 +62,21 @@ public class IncidenciaService {
 		Incidencia incidencia=IncidenciaDto.toEntity(dto);
 		if (dto.getEquipo() != null) {
 			incidencia.setEquipo(equipoRepository.getEquipoByEtiqueta(dto.getEquipo()).orElse(null));
+		}
+		if (dto.getComentarios() != null){
+			Comentario comentario = new Comentario();
+			List<ComentarioDto> comentariosDto = dto.getComentarios().stream()
+					.map(comentario1 -> {
+						ComentarioDto nuevoComentarioDto = new ComentarioDto();
+						nuevoComentarioDto.setTexto(nuevoComentarioDto.getTexto() + "\n" + comentario1.getTexto());
+						return nuevoComentarioDto;
+					})
+					.collect(Collectors.toList());
+			comentariosDto.forEach(comentarioDto -> comentario.setTexto(comentarioDto.getTexto()));
+			comentario.setIncidencia(incidencia);
+			comentario.setPersonal(incidencia.getPersonal1());
+			comentario.setAdjuntoUrl(incidencia.getAdjuntoUrl());
+			comentarioRepository.save(comentario);
 		}
 		incidenciaRepository.save(incidencia);
 	}
@@ -111,33 +127,6 @@ public class IncidenciaService {
         }
         return query.getResultList().stream().map(x->IncidenciaDto.fromEntity(x)).collect(Collectors.toList());
 	}
-/*
-	public List<IncidenciaDto> getByTipo(String tipo) {
-		return incidenciaRepository.findByTipo(tipo).stream().map(x->IncidenciaDto.fromEntity(x)).collect(Collectors.toList());
-	}
-
-	public List<IncidenciaDto> getBySubtipo(int subtipoId) {
-		return incidenciaRepository.findByIncidenciasSubtipo_Id(subtipoId).stream().map(x->IncidenciaDto.fromEntity(x)).collect(Collectors.toList());
-	}
-
-	public List<Incidencia> getBySubtipoNombre(String subtipoNombre) {
-		List<IncidenciasSubtipo> incidenciasSubtipos = incidenciasSubtipoRepository.findBySubtipoNombre(subtipoNombre);
-
-		if (!incidenciasSubtipos.isEmpty()) {
-			List<Integer> subtipoIds = incidenciasSubtipos.stream().map(IncidenciasSubtipo::getId)
-					.collect(Collectors.toList());
-
-			return incidenciaRepository.findByIncidenciasSubtipo_IdIn(subtipoIds);
-		} else {
-			return Collections.emptyList();
-		}
-	}
-
-	public List<Incidencia> getByEstado(String estado) {
-		return incidenciaRepository.findByEstado(estado);
-	}
-
- */
 
 	public void updateById(IncidenciaDto request) {
 		Incidencia incidencia = incidenciaRepository.findById(request.getNum()).get();
@@ -157,6 +146,10 @@ public class IncidenciaService {
 		if(request.getIncidenciasSubtipo()!=null){
 			incidencia.setIncidenciasSubtipo(IncidenciaSubtipoDto.toEntity(request.getIncidenciasSubtipo()));
 		}
+		if(request.getTiempoDec()!=null){
+			incidencia.setTiempo_dec(request.getTiempoDec());
+		}
+		incidenciaRepository.save(incidencia);
 	}
 
 	public void asignarIncidencia(int idPersonal, int idIncidencia) {
@@ -178,5 +171,12 @@ public class IncidenciaService {
 		} catch (Exception e) {
 			return false;
 		}
+	}
+
+	public List<IncidenciaDto> getIncidenciasAbiertas(){
+		return incidenciaRepository.findByEstado("abierta")
+				.stream()
+				.map(x->IncidenciaDto.fromEntity(x))
+				.collect(Collectors.toList());
 	}
 }

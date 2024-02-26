@@ -3,6 +3,7 @@ package es.grupo4.apirest.controller;
 import java.util.List;
 import java.util.Optional;
 
+import es.grupo4.apirest.Dto.ComentarioDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +18,7 @@ import es.grupo4.apirest.service.ComentarioService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @RestController
-@RequestMapping("/coment")
+@RequestMapping("/comment")
 public class ComentarioController {
 	@Autowired
 	ComentarioService comentarioService;
@@ -27,22 +28,22 @@ public class ComentarioController {
 		return this.comentarioService.getComentarios();
 	}
 	
-	@PostMapping
-	public Comentario saveComentario(@RequestBody Comentario comentario) {
-		return comentarioService.saveComentario(comentario);
+	@PostMapping("/save")
+	public void saveComentario(@RequestBody ComentarioDto dto) {
+		comentarioService.saveComentario(dto);
 	}
 	
-	@GetMapping(path = "/{id}")
+	@GetMapping(path = "/comentario/{id}")
 	public Optional<Comentario> getComentarioById(@PathVariable("id") int id){
 		return this.comentarioService.getById(id);
 	}
 	
-	@PutMapping(path = "/{id}")
-	public Comentario updateById(@RequestBody Comentario comentario, @PathVariable int id) {
-		return comentarioService.updateById(comentario, id);
+	@PutMapping(path = "/update/{id}")
+	public void updateById(@RequestBody ComentarioDto dto) {
+		comentarioService.updateById(dto);
 	}
 	
-	@DeleteMapping(path = "/{id}")
+	@DeleteMapping(path = "/delete/{id}")
 	public String deleteComentarioById(@PathVariable("id") int id) {
 		boolean deleted = comentarioService.deletedComentario(id);
 		if (deleted) {

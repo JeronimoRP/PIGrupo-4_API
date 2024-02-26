@@ -26,7 +26,6 @@ import es.grupo4.apirest.service.IncidenciaService;
 public class IncidenciaController {
 
 	@Autowired
-
 	private IncidenciaService incidenciaService;
 
 	@GetMapping("/incidencias")
@@ -40,33 +39,7 @@ public class IncidenciaController {
 			@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime fechaCreacion) {
 	    return incidenciaService.getByTipoAndIncidenciasSubtipoAndEstado(filtro);
 	}
-	/*
-	@GetMapping("/incidencias/tipo")
-	public List<Incidencia> getIncidenciasByTipo(@RequestParam(name = "tipo") String tipo) {
-	    try {
-	        return incidenciaService.getByTipo(tipo);
-	    } catch (IllegalArgumentException e) {
-	        return Collections.emptyList();
-	    }
-	}
-	
-	@GetMapping("/subtipo/id/{subtipoId}")
-    public List<Incidencia> getIncidenciasBySubtipo(@PathVariable int subtipoId) {
-        return incidenciaService.getBySubtipo(subtipoId);
-    }
-	
-	@GetMapping("/subtipo/nombre/{subtipoNombre}")
-	public List<Incidencia> getIncidenciasBySubtipoNombre(@PathVariable String subtipoNombre) {
-        return incidenciaService.getBySubtipoNombre(subtipoNombre);
-    }
-
-	@GetMapping("/incidencias/estado")
-	public List<Incidencia> getIncidenciasByEstado(@RequestParam(name = "estado") String estado) {
-		return incidenciaService.getByEstado(estado);
-	}
-
-	 */
-	@GetMapping("/incidencias/{creadorId}")
+	@PostMapping("/incidencias/{creadorId}")
 	public List<IncidenciaDto> getIncidenciasByCreador(@PathVariable int creadorId) {
 		return incidenciaService.getIncidenciasByCreadorId(creadorId);
 	}
@@ -97,5 +70,10 @@ public class IncidenciaController {
 		} else {
 			return "Error al eliminar aula";
 		}
+	}
+
+	@GetMapping("/abiertas")
+	public List<IncidenciaDto> getIncidenciasAbiertas(){
+		return incidenciaService.getIncidenciasAbiertas();
 	}
 }

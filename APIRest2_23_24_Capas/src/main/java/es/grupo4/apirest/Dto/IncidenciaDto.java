@@ -9,6 +9,7 @@ import org.apache.commons.io.FilenameUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.sql.Time;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Date;
@@ -40,6 +41,8 @@ public class IncidenciaDto {
     private PersonalDto profesorIncidencia;
 
     private PersonalDto profesorAdministrador;
+
+    private Time tiempoDec;
 
     private String fichero;
 
@@ -157,6 +160,14 @@ public class IncidenciaDto {
         this.profesorAdministrador = profesorAdministrador;
     }
 
+    public Time getTiempoDec() {
+        return tiempoDec;
+    }
+
+    public void setTiempoDec(Time tiempoDec) {
+        this.tiempoDec = tiempoDec;
+    }
+
     public static IncidenciaDto fromEntity(Incidencia inci){
         IncidenciaDto dto=new IncidenciaDto();
         dto.setNum(inci.getNum());
@@ -261,8 +272,9 @@ public class IncidenciaDto {
         }
         if(dto.getAdjuntoUrl()!=null){
 
-        }
+        }else {
 
+        }
 
         return incidencia;
     }
